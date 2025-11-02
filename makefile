@@ -4,7 +4,7 @@ PROJECT_DIR = $(CURDIR)
 GQLGEN = github.com/99designs/gqlgen
 
 #Environment
-PORT = 9090
+PORT = 8080
 
 #Commands
 build:
@@ -12,9 +12,9 @@ build:
 	@$(GO) build -o $(PROJECT_DIR)/bin/server $(PROJECT_DIR)/server.go
 	@echo "=> (2/2) Servidor construído em: $(PROJECT_DIR)/bin/server"
 
-run:
+run: build
 	@echo "=> (1/1) Iniciando servidor..."
-	@PORT=$(PORT) $(PROJECT_DIR)/bin/server
+	@$(PROJECT_DIR)/bin/server
 
 gen:
 	@echo "=> (1/2) Gerando GraphQL schema..."
@@ -26,3 +26,4 @@ clean:
 	@rm -rf $(PROJECT_DIR)/bin
 	@echo "=> (2/2) $(PROJECT_DIR)/bin limpo..."
 
+.DEFAULT_GOAL = run
