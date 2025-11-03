@@ -75,5 +75,6 @@ func splitTag(tag string) []string {
 			current += string(char)
 		}
 	}
+	result = append(result, current)
 	return result
 }
