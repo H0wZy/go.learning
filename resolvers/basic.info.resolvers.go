@@ -10,11 +10,31 @@ import (
 
 	"github.com/H0wZy/go.learning/generated"
 	"github.com/H0wZy/go.learning/model"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+var collectionName = "basic-info"
 
 // CreateBasicInfo is the resolver for the createBasicInfo field.
 func (r *mutationResolver) CreateBasicInfo(ctx context.Context, basicInfo model.BasicInfoInput) (*model.BasicInfo, error) {
-	panic(fmt.Errorf("not implemented: CreateBasicInfo - createBasicInfo"))
+
+	collection := r.DB.Collection(collectionName)
+	newID := primitive.NewObjectID()
+	newBasicInfo := model.BasicInfo{
+		ID:        newID.Hex(),
+		FirstName: basicInfo.FirstName,
+		LastName:  basicInfo.LastName,
+		NickName:  *basicInfo.NickName,
+		Pronouns:  *basicInfo.Pronouns,
+		Headline:  basicInfo.Headline,
+	}
+	_, err := collection.InsertOne(ctx, newBasicInfo)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &newBasicInfo, nil
 }
 
 // UpdateBasicInfo is the resolver for the updateBasicInfo field.

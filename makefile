@@ -2,9 +2,17 @@
 GO = go
 PROJECT_DIR = $(CURDIR)
 GQLGEN = github.com/99designs/gqlgen
+DB_URL = mongodb://root:password@localhost:27017
+DB_NAME = cv_manager
 
 #Environment
 PORT = 8080
+
+
+#$env:DB_NAME="cv_manager"
+#$env:DB_URL="mongodb://root:password@localhost:27017"
+#$env:PORT="8080"
+
 
 #Commands
 build:
@@ -14,7 +22,7 @@ build:
 
 run: build
 	@echo "=> (1/1) Iniciando servidor..."
-	@$(PROJECT_DIR)/bin/server
+	@DB_NAME=$(DB_NAME) DB_URL=$(DB_URL) PORT=$(PORT) $(PROJECT_DIR)/bin/server
 
 gen:
 	@echo "=> (1/2) Gerando GraphQL schema..."

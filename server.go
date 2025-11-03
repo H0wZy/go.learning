@@ -10,6 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/H0wZy/go.learning/config"
+	"github.com/H0wZy/go.learning/db"
 	"github.com/H0wZy/go.learning/generated"
 	"github.com/H0wZy/go.learning/resolvers"
 	"github.com/go-chi/chi"
@@ -24,6 +25,12 @@ func main() {
 		port = config.DefaultPort
 	}
 
+	dataBase, err := db.New(env.DbName)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	router := chi.NewRouter()
 
 	router.Use(cors.Handler(cors.Options{
@@ -31,7 +38,7 @@ func main() {
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodOptions},
 		AllowCredentials: true}))
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{}}))
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{DB: dataBase}}))
 
 	srv.AddTransport(transport.Options{})
 	srv.AddTransport(transport.GET{})
