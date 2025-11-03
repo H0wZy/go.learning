@@ -1,6 +1,6 @@
 ﻿#Variables
 GO = go
-PROJECT_DIR = $(CURDIR)
+PROJECT_DIR = $(shell pwd)
 GQLGEN = github.com/99designs/gqlgen
 DB_URL = mongodb://root:password@localhost:27017
 DB_NAME = cv_manager
@@ -33,5 +33,10 @@ clean:
 	@echo "=> (1/2) Limpando projeto..."
 	@rm -rf $(PROJECT_DIR)/bin
 	@echo "=> (2/2) $(PROJECT_DIR)/bin limpo..."
+
+up:
+	@echo "=> (1/2) Subindo containers..."
+	@docker compose up -d
+	@echo "=> (2/2) Containers subidos."
 
 .DEFAULT_GOAL = run
