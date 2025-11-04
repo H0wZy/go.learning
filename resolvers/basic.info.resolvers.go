@@ -10,6 +10,7 @@ import (
 
 	"github.com/H0wZy/go.learning/generated"
 	"github.com/H0wZy/go.learning/model"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -54,7 +55,26 @@ func (r *queryResolver) GetBasicInfo(ctx context.Context, id string) (*model.Bas
 
 // GetBasicInfos is the resolver for the getBasicInfos field.
 func (r *queryResolver) GetBasicInfos(ctx context.Context) ([]*model.BasicInfo, error) {
-	panic(fmt.Errorf("not implemented: GetBasicInfos - getBasicInfos"))
+
+	collection := r.DB.Collection(collectionName)
+	cursor, err := collection.Find(ctx, bson.M{})
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(ctx)
+
+	var basicInfos []*model.BasicInfo
+	for cursor.Next(ctx) {
+		var basicInfo model.BasicInfo
+		err := cursor.Decode(&basicInfo)
+		if err != nil {
+			return nil, err
+		}
+		basicInfos = append(basicInfos, &basicInfo)
+	}
+	return basicInfos, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
