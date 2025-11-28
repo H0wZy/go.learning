@@ -24,10 +24,16 @@ func (r *mutationResolver) CreateBasicInfo(ctx context.Context, basicInfo model.
 		ID:        newID.Hex(),
 		FirstName: basicInfo.FirstName,
 		LastName:  basicInfo.LastName,
-		NickName:  *basicInfo.NickName,
-		Pronouns:  *basicInfo.Pronouns,
 		Headline:  basicInfo.Headline,
 	}
+
+	if basicInfo.NickName != nil {
+		newBasicInfo.NickName = *basicInfo.NickName
+	}
+	if basicInfo.Pronouns != nil {
+		newBasicInfo.Pronouns = *basicInfo.Pronouns
+	}
+
 	_, err := collection.InsertOne(ctx, newBasicInfo)
 
 	if err != nil {
